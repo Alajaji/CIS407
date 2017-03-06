@@ -1,6 +1,8 @@
 package com.game.main;
 
 import java.awt.Graphics;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public abstract class GameObject {
 	protected int x,y;
@@ -54,6 +56,7 @@ public abstract class GameObject {
 	public int getVelY(){
 		return velY;
 	}
+	
 	
 }
 

@@ -1,13 +1,16 @@
 package com.game.main;
 
 import java.awt.Canvas;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Game extends Canvas implements Runnable{
 	
-
+	
 	private static final long serialVersionUID = -473349850293143017L;
 	
 	public static final int WIDTH = 1000, HEIGHT = WIDTH / 12*9;
@@ -15,15 +18,26 @@ public class Game extends Canvas implements Runnable{
 	private boolean running = false;
 	private Player player;
 	private Thunder thunder;
+	int seconedPassed = 0;
+	Timer timer = new Timer();
+	TimerTask task = new TimerTask(){
+		public void run(){
+			seconedPassed++;
+		}
+		
+		
+	};
 	
 	public Game(){
 		
 		
-		new Window (WIDTH, HEIGHT, "My Game!", this);
-		
+		timer.scheduleAtFixedRate(task, 1000, 1000);
+		new Window (WIDTH, HEIGHT, "THUNDER!", this);
 		player = new Player(450,470,ID.Player);
-		thunder = new Thunder(900,550,ID.Thunder);
 		this.addKeyListener(new KeyInput(player));
+		thunder = new Thunder(1150,550,ID.Thunder);
+		
+		
 		
 
 		
@@ -90,8 +104,14 @@ public class Game extends Canvas implements Runnable{
 			this.createBufferStrategy(2);
 			return;
 		}
+		
 		Graphics g = bs.getDrawGraphics();
-		g.setColor(new Color(102,155,102));
+		if (seconedPassed == 3 || seconedPassed == 9 ){
+			g.setColor(Color.YELLOW);
+
+		}else{
+			g.setColor(new Color(102,155,102));
+		}
 		g.fillRect(0, 0, WIDTH, 550);
 		
 		g.setColor(new Color(102,102,51));
