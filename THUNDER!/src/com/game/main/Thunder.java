@@ -9,20 +9,18 @@ public class Thunder extends GameObject{
 	public Thunder(int x, int y, ID id) {
 		super(x, y, id);
 		
-		Random random = new Random();
-		Random random1 = new Random();
 		
-		velX = 10;
-		velY = 10;
+		this.x = x;
+		this.y = y;
 	}
 	
 	public void tick(){
-		x += velX;
+		x-= 20;
 		
 	}
 	
 	public void render(Graphics g){
 		g.setColor(Color.YELLOW);
-		g.fillRect(x, y, 1000, 10);
+		g.fillRect(x, y, 100, 20);
 	}
 }

@@ -14,7 +14,7 @@ public class KeyInput extends KeyAdapter{
 		int key = e.getKeyCode();
 		
 		
-		if(key == KeyEvent.VK_W && player.getY() >= 470){
+		if(key == KeyEvent.VK_SPACE && player.getY() >= 470){
 			player.setY(player.getY() - 100);
 			player.setVelY(10);
 		}

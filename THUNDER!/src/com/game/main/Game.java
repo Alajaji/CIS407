@@ -13,21 +13,19 @@ public class Game extends Canvas implements Runnable{
 	public static final int WIDTH = 1000, HEIGHT = WIDTH / 12*9;
 	private Thread thread;
 	private boolean running = false;
-	private Handler handler;
 	private Player player;
+	private Thunder thunder;
 	
 	public Game(){
 		
 		
-		new Window(WIDTH, HEIGHT, "My Game!", this);
+		new Window (WIDTH, HEIGHT, "My Game!", this);
 		
 		player = new Player(450,470,ID.Player);
+		thunder = new Thunder(900,550,ID.Thunder);
 		this.addKeyListener(new KeyInput(player));
 		
 
-		
-		//handler = new Handler();
-		//handler.addObject(new Player(450,470,ID.Player));
 		
 		
 	}
@@ -82,6 +80,7 @@ public class Game extends Canvas implements Runnable{
 	
 	private void tick(){
 		player.tick();
+		thunder.tick();
 	}
 	
 	private void render(){
@@ -102,6 +101,7 @@ public class Game extends Canvas implements Runnable{
 		g.fillRect(0,570, WIDTH, 200);
 		
 		player.render(g);
+		thunder.render(g);
 		
 		g.dispose();
 		bs.show();
