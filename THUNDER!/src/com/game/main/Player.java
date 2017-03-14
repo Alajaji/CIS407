@@ -2,9 +2,14 @@ package com.game.main;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.util.Random;
 
 public class Player extends GameObject{
+
+
+
 
 	public Player(int x, int y, ID id) {
 		super(x, y, id);
@@ -12,14 +17,19 @@ public class Player extends GameObject{
 		
 		this.x = x;
 		this.y = y;
+
 	}
-	
+	public Rectangle getBounds(){
+		return new Rectangle(x, y, 30, 100);
+	}
 	public void tick(){
 		if(y != 470){
 			y += velY;
 		}
 		
+		
 	}
+	
 	
 	public void render(Graphics g){
 		g.setColor(new Color(60,0,0));
@@ -42,6 +52,12 @@ public class Player extends GameObject{
 		
 		g.setColor(new Color(60,0,0));
 		g.fillRect(x, y+55, 30, 45);
+		
+		Graphics2D g2d = (Graphics2D) g;
+		g.setColor(new Color(153,102,0));
+		g2d.draw(getBounds());
+		
+		
 		
 		
 		

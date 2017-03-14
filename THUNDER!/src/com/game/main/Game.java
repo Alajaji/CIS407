@@ -2,11 +2,22 @@ package com.game.main;
 
 import java.awt.Canvas;
 
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.io.File;
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 public class Game extends Canvas implements Runnable{
 	
@@ -18,6 +29,11 @@ public class Game extends Canvas implements Runnable{
 	private boolean running = false;
 	private Player player;
 	private Thunder thunder;
+	private HealthBar healthBar;
+	private int score = HealthBar.HEALTH;;
+	private String highscore = "High Score: ";
+
+	
 	int seconedPassed = 0;
 	Timer timer = new Timer();
 	TimerTask task = new TimerTask(){
@@ -33,9 +49,15 @@ public class Game extends Canvas implements Runnable{
 		
 		timer.scheduleAtFixedRate(task, 1000, 1000);
 		new Window (WIDTH, HEIGHT, "THUNDER!", this);
+		
+		healthBar = new HealthBar();
 		player = new Player(450,470,ID.Player);
 		this.addKeyListener(new KeyInput(player));
+		this.requestFocus();
 		thunder = new Thunder(1150,550,ID.Thunder);
+		
+		
+		
 		
 		
 		
@@ -60,6 +82,47 @@ public class Game extends Canvas implements Runnable{
 	}
 	
 	public void run(){
+		seconedPassed = 0;
+		highscore = "High Score: ";
+		Clip music = null;
+		Clip die = null;
+		Clip won = null;
+		try {
+			  AudioInputStream audio = AudioSystem.getAudioInputStream(new File("ThunderstruckACDC8bit.wav"));
+			  music = AudioSystem.getClip();
+			  music.open(audio);
+			  music.start();
+			  audio = AudioSystem.getAudioInputStream(new File("smb_mariodie.wav"));
+			  die = AudioSystem.getClip();
+			  die.open(audio);
+			} 
+			catch(UnsupportedAudioFileException uae) {
+			  System.out.println(uae);
+			} 
+			catch(IOException ioe) { 
+			  System.out.println(ioe);
+			} 
+			catch(LineUnavailableException lua) { 
+			  System.out.println(lua);
+			}
+		
+		try {
+			  AudioInputStream audio = AudioSystem.getAudioInputStream(new File("smb_stage_clear.wav"));
+			  won = AudioSystem.getClip();
+			  won.open(audio);
+			  
+			} 
+			catch(UnsupportedAudioFileException uae) {
+			  System.out.println(uae);
+			} 
+			catch(IOException ioe) { 
+			  System.out.println(ioe);
+			}
+			catch(LineUnavailableException lua) { 
+			  System.out.println(lua);
+			}
+		thunder = new Thunder(1150,550,ID.Thunder);
+		HealthBar.HEALTH = 100;
 		
 		long lastTime = System.nanoTime();
         double amountOfTicks = 60.0;
@@ -87,14 +150,49 @@ public class Game extends Canvas implements Runnable{
                                 //System.out.println("FPS: "+ frames);
                                 frames = 0;
                             }
+                            if(HealthBar.HEALTH <=0){
+                            	music.stop();
+                            	die.start();
+                            	if (JOptionPane.showConfirmDialog(null, "You Died! Want to restart?","GAME OVER!",
+                    			        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                            		die.stop();
+                            		run();
+                    			} else {
+                    				System.exit(1);
+                    			}
+                            }
+                            if(seconedPassed == 91){
+                            	music.stop();
+                            	won.start();
+                            	if(HealthBar.HEALTH >= score){
+                            		score = HealthBar.HEALTH;
+                            		highscore = "New High Score! ";
+                            	}
+                            	if (JOptionPane.showConfirmDialog(null, "You Won! Want to restart?" + 
+                                    	"\n" + highscore + score ,"YOU WON!",
+                    			        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                            		won.stop();
+                            		run();
+                    			} else {
+                    				System.exit(1);
+                    			}
+                            }
         }
-                stop();
+        
+        stop();
+                
 		
 	}
 	
 	private void tick(){
 		player.tick();
 		thunder.tick();
+		healthBar.tick();
+		if(player.getBounds().intersects(thunder.getBounds())){
+			HealthBar.HEALTH -= 2;
+		}
+		
+		
 	}
 	
 	private void render(){
@@ -106,14 +204,9 @@ public class Game extends Canvas implements Runnable{
 		}
 		
 		Graphics g = bs.getDrawGraphics();
-		if (seconedPassed == 3 || seconedPassed == 9 ){
-			g.setColor(Color.YELLOW);
-
-		}else{
-			g.setColor(new Color(102,155,102));
-		}
+		g.setColor(new Color(102,155,102));
 		g.fillRect(0, 0, WIDTH, 550);
-		
+	
 		g.setColor(new Color(102,102,51));
 		g.fillRect(0,550, WIDTH, 20);
 		
@@ -122,6 +215,7 @@ public class Game extends Canvas implements Runnable{
 		
 		player.render(g);
 		thunder.render(g);
+		healthBar.render(g);
 		
 		g.dispose();
 		bs.show();
@@ -130,6 +224,8 @@ public class Game extends Canvas implements Runnable{
 	public static void main(String[] args) {
 		
 		new Game();
+		
+		
 
 	}
 

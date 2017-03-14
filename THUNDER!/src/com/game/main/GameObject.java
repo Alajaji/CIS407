@@ -1,6 +1,7 @@
 package com.game.main;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,6 +17,7 @@ public abstract class GameObject {
 	}
 	public abstract void tick();
 	public abstract void render(Graphics g);
+	public abstract Rectangle getBounds();
 	
 	public void setX(int x){
 		this.x = x;

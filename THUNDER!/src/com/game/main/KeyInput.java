@@ -14,15 +14,15 @@ public class KeyInput extends KeyAdapter{
 		int key = e.getKeyCode();
 		
 		
-		if(key == KeyEvent.VK_UP && player.getY() >= 470){
+		if(key == KeyEvent.VK_SPACE && player.getY() >= 470){
 			player.setY(player.getY() - 150);
 			player.setVelY(10);
 		}
-		if(key == KeyEvent.VK_LEFT){
+		if(key == KeyEvent.VK_A){
 			player.setX(player.getX() - 10);
 			
 		}
-		if(key == KeyEvent.VK_RIGHT){
+		if(key == KeyEvent.VK_D){
 			player.setX(player.getX() + 10);
 			
 		}
