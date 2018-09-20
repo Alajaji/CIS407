@@ -1,4 +1,4 @@
-# CIS407
+# THUNDER
 A game for CIS407 class
 
 A rhythm game based on an 8bit version of the AC/DC song Thunderstruck.
